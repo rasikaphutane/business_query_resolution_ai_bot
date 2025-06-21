@@ -1,0 +1,25 @@
+fastapi
+uvicorn
+langchain
+langchain-community            # Ensure compatibility
+langchain_community            # Just in case for edge use
+langchain_ollama               # For Ollama integration
+chromadb
+python-jose
+passlib[bcrypt]
+sentence-transformers
+pydantic[email]                # Includes email-validator for EmailStr
+python-dotenv
+python-multipart
+requests
+pandas
+joblib                         # For loading saved sklearn models
+sqlalchemy                     # ORM used in models/db
+email-validator                # Explicit install to avoid any Pydantic schema errors
+# Optional dependencies for additional features
+# Uncomment the following lines if you need these features      
+# fastapi-users[sqlalchemy,oauth2]  # For user management with OAuth2
+# fastapi-users[beanie,oauth2]      # For user management with Beanie ODM
+# fastapi-users[all]                # For all user management features
+
+    

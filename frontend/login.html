@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Executive Access Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="login.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    
+    /* Enhanced Animated Background */
+    body {
+      background: linear-gradient(135deg, #000000 0%, #111111 25%, #1a1a1a 50%, #111111 75%, #000000 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 25s ease infinite;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 40% 80%, rgba(147, 51, 234, 0.06) 0%, transparent 70%),
+        radial-gradient(circle at 90% 90%, rgba(168, 85, 247, 0.04) 0%, transparent 50%);
+      animation: floatingOrbs 30s ease-in-out infinite;
+      z-index: -2;
+    }
+    
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(45deg, transparent 30%, rgba(99, 102, 241, 0.02) 50%, transparent 70%),
+        linear-gradient(-45deg, transparent 30%, rgba(59, 130, 246, 0.015) 50%, transparent 70%);
+      animation: meshPattern 35s linear infinite;
+      z-index: -1;
+    }
+    
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      25% { background-position: 100% 50%; }
+      50% { background-position: 100% 100%; }
+      75% { background-position: 0% 100%; }
+    }
+    
+    @keyframes floatingOrbs {
+      0%, 100% { 
+        transform: translateY(0) rotate(0deg) scale(1);
+        opacity: 0.4;
+      }
+      25% { 
+        transform: translateY(-30px) rotate(90deg) scale(1.1);
+        opacity: 0.6;
+      }
+      50% { 
+        transform: translateY(-15px) rotate(180deg) scale(0.9);
+        opacity: 0.5;
+      }
+      75% { 
+        transform: translateY(-45px) rotate(270deg) scale(1.05);
+        opacity: 0.7;
+      }
+    }
+    
+    @keyframes meshPattern {
+      0% { transform: translateX(-50%) translateY(-50%) rotate(0deg); }
+      100% { transform: translateX(-50%) translateY(-50%) rotate(360deg); }
+    }
+    
+    /* Floating Particles */
+    .floating-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: rgba(99, 102, 241, 0.4);
+      border-radius: 50%;
+      animation: float 20s linear infinite;
+    }
+    
+    .particle:nth-child(even) {
+      background: rgba(59, 130, 246, 0.3);
+      animation-duration: 25s;
+    }
+    
+    .particle:nth-child(3n) {
+      background: rgba(147, 51, 234, 0.25);
+      animation-duration: 30s;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-10vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    
+    /* Enhanced Glass Effects */
+    .glass-effect {
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 
+        0 32px 64px -12px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(255, 255, 255, 0.02),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.02);
+      position: relative;
+    }
+    
+    .glass-effect::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+      animation: shimmer 6s ease-in-out infinite;
+    }
+    
+    @keyframes shimmer {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+    
+    /* Spectacular Title */
+    .executive-title {
+      font-size: 4.5rem;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      background: linear-gradient(
+        135deg, 
+        #f8fafc 0%, 
+        #e2e8f0 25%, 
+        #cbd5e1 50%, 
+        #94a3b8 75%, 
+        #64748b 100%
+      );
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 
+        0 0 40px rgba(248, 250, 252, 0.3),
+        0 0 80px rgba(226, 232, 240, 0.2),
+        0 0 120px rgba(203, 213, 225, 0.1);
+      animation: 
+        titleShimmer 4s ease-in-out infinite,
+        titleFloat 8s ease-in-out infinite,
+        titlePulse 12s ease-in-out infinite;
+      text-align: center;
+      margin-bottom: 1rem;
+      line-height: 1.1;
+    }
+    
+    @keyframes titleShimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    @keyframes titleFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+    }
+    
+    @keyframes titlePulse {
+      0%, 100% { 
+        text-shadow: 
+          0 0 40px rgba(248, 250, 252, 0.3),
+          0 0 80px rgba(226, 232, 240, 0.2),
+          0 0 120px rgba(203, 213, 225, 0.1);
+      }
+      50% { 
+        text-shadow: 
+          0 0 60px rgba(248, 250, 252, 0.5),
+          0 0 120px rgba(226, 232, 240, 0.3),
+          0 0 180px rgba(203, 213, 225, 0.2);
+      }
+    }
+    
+    /* Elegant Subtitle */
+    .executive-subtitle {
+      font-size: 1.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      background: linear-gradient(135deg, #94a3b8 0%, #64748b 50%, #475569 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      margin-bottom: 4rem;
+      animation: subtitleGlow 6s ease-in-out infinite;
+      text-shadow: 0 0 30px rgba(148, 163, 184, 0.4);
+    }
+    
+    @keyframes subtitleGlow {
+      0%, 100% { 
+        text-shadow: 0 0 30px rgba(148, 163, 184, 0.4);
+        transform: scale(1);
+      }
+      50% { 
+        text-shadow: 0 0 50px rgba(148, 163, 184, 0.6);
+        transform: scale(1.02);
+      }
+    }
+    
+    /* Premium Input Fields */
+    .glass-input {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      color: #f8fafc;
+      font-size: 1.25rem;
+      font-weight: 500;
+      letter-spacing: 0.025em;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .glass-input::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.15), transparent);
+      transition: left 0.8s ease-in-out;
+    }
+    
+    .glass-input:focus::before {
+      left: 100%;
+    }
+    
+    .glass-input:focus {
+      background: rgba(0, 0, 0, 0.8);
+      border-color: rgba(99, 102, 241, 0.5);
+      box-shadow: 
+        0 0 0 4px rgba(99, 102, 241, 0.15),
+        0 25px 50px -12px rgba(99, 102, 241, 0.3);
+      transform: scale(1.02);
+    }
+    
+    .glass-input::placeholder {
+      color: rgba(148, 163, 184, 0.6);
+      font-weight: 400;
+      letter-spacing: 0.05em;
+    }
+    
+    /* Executive Button */
+    .executive-button {
+      background: linear-gradient(135deg, #1e40af 0%, #3730a3 25%, #581c87 50%, #7c3aed 75%, #a855f7 100%);
+      border: 2px solid rgba(99, 102, 241, 0.3);
+      color: #ffffff;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 
+        0 0 40px rgba(99, 102, 241, 0.3),
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+    
+    .executive-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.8s ease-in-out;
+    }
+    
+    .executive-button:hover::before {
+      left: 100%;
+    }
+    
+    .executive-button:hover {
+      transform: translateY(-6px) scale(1.05);
+      background: linear-gradient(135deg, #3b82f6 0%, #6366f1 25%, #8b5cf6 50%, #a855f7 75%, #c084fc 100%);
+      border-color: rgba(99, 102, 241, 0.6);
+      box-shadow: 
+        0 0 60px rgba(99, 102, 241, 0.5),
+        0 30px 60px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+    
+    .executive-button:active {
+      transform: translateY(-3px) scale(1.02);
+    }
+    
+    /* Error Message */
+    .error-message {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(127, 29, 29, 0.1));
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      animation: errorPulse 3s ease-in-out infinite;
+    }
+    
+    @keyframes errorPulse {
+      0%, 100% { 
+        border-color: rgba(239, 68, 68, 0.3);
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+      }
+      50% { 
+        border-color: rgba(239, 68, 68, 0.6);
+        box-shadow: 0 0 40px rgba(239, 68, 68, 0.4);
+      }
+    }
+    
+    /* Status Indicators */
+    .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
+      box-shadow: 0 0 20px rgba(96, 165, 250, 0.6);
+      animation: indicatorPulse 2.5s ease-in-out infinite;
+    }
+    
+    .status-indicator:nth-child(2) { 
+      animation-delay: 0.5s;
+      background: linear-gradient(135deg, #a855f7, #8b5cf6);
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
+    }
+    .status-indicator:nth-child(3) { 
+      animation-delay: 1s;
+      background: linear-gradient(135deg, #ec4899, #db2777);
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.6);
+    }
+    
+    @keyframes indicatorPulse {
+      0%, 100% { 
+        transform: scale(1);
+        opacity: 0.7;
+      }
+      50% { 
+        transform: scale(1.4);
+        opacity: 1;
+      }
+    }
+    
+    /* Atmospheric Text */
+    .atmospheric-text {
+      color: rgba(148, 163, 184, 0.5);
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      animation: atmosphericFlicker 10s ease-in-out infinite;
+    }
+    
+    @keyframes atmosphericFlicker {
+      0%, 100% { opacity: 0.5; }
+      25% { opacity: 0.7; }
+      50% { opacity: 0.4; }
+      75% { opacity: 0.8; }
+    }
+    
+    /* Container Animation */
+    .container-entrance {
+      animation: containerEntrance 2.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    @keyframes containerEntrance {
+      from {
+        opacity: 0;
+        transform: translateY(120px) scale(0.7);
+        filter: blur(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+    }
+    
+    /* Enhanced Glow Effects */
+    .glow-subtle {
+      box-shadow: 
+        0 0 30px rgba(99, 102, 241, 0.1),
+        0 0 60px rgba(59, 130, 246, 0.08),
+        0 0 120px rgba(147, 51, 234, 0.05);
+      animation: subtleGlow 10s ease-in-out infinite;
+    }
+    
+    @keyframes subtleGlow {
+      0%, 100% { 
+        box-shadow: 
+          0 0 30px rgba(99, 102, 241, 0.1),
+          0 0 60px rgba(59, 130, 246, 0.08),
+          0 0 120px rgba(147, 51, 234, 0.05);
+      }
+      50% { 
+        box-shadow: 
+          0 0 40px rgba(99, 102, 241, 0.15),
+          0 0 80px rgba(59, 130, 246, 0.12),
+          0 0 160px rgba(147, 51, 234, 0.08);
+      }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .executive-title {
+        font-size: 3rem;
+        letter-spacing: -0.025em;
+      }
+      
+      .executive-subtitle {
+        font-size: 1.25rem;
+        letter-spacing: 0.05em;
+      }
+      
+      .glass-input {
+        font-size: 1.125rem;
+      }
+      
+      .executive-button {
+        font-size: 1.25rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .executive-title {
+        font-size: 2.5rem;
+      }
+      
+      .executive-subtitle {
+        font-size: 1.125rem;
+      }
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen overflow-hidden relative">
+  <!-- Floating Particles -->
+  <div class="floating-particles">
+    <div class="particle" style="left: 5%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 15%; animation-delay: 3s;"></div>
+    <div class="particle" style="left: 25%; animation-delay: 6s;"></div>
+    <div class="particle" style="left: 35%; animation-delay: 9s;"></div>
+    <div class="particle" style="left: 45%; animation-delay: 12s;"></div>
+    <div class="particle" style="left: 55%; animation-delay: 15s;"></div>
+    <div class="particle" style="left: 65%; animation-delay: 18s;"></div>
+    <div class="particle" style="left: 75%; animation-delay: 21s;"></div>
+    <div class="particle" style="left: 85%; animation-delay: 24s;"></div>
+    <div class="particle" style="left: 95%; animation-delay: 27s;"></div>
+  </div>
+
+  <!-- Login Container -->
+  <div class="glass-effect glow-subtle rounded-3xl p-16 w-full max-w-3xl container-entrance relative z-10">
+    <!-- Spectacular Title -->
+    <h1 class="executive-title">
+      Executive Access
+    </h1>
+    
+    <!-- Elegant Subtitle -->
+    <p class="executive-subtitle">
+      Business Intelligence Portal
+    </p>
+    
+    <!-- Username Input -->
+    <div class="mb-10">
+      <input 
+        id="username" 
+        class="glass-input w-full p-6 rounded-2xl focus:outline-none transition-all duration-500" 
+        placeholder="Executive Credentials"
+      >
+    </div>
+    
+    <!-- Password Input -->
+    <div class="mb-12">
+      <input 
+        id="password" 
+        type="password" 
+        class="glass-input w-full p-6 rounded-2xl focus:outline-none transition-all duration-500" 
+        placeholder="Security Authorization"
+      >
+    </div>
+    
+    <!-- Executive Button -->
+    <button 
+      id="loginBtn" 
+      class="executive-button w-full py-6 rounded-2xl relative overflow-hidden group transition-all duration-600"
+    >
+      <span class="relative z-10">Access Business Suite</span>
+    </button>
+    
+    <!-- Error Message -->
+    <div id="error" class="error-message mt-10 p-6 rounded-2xl hidden text-lg">
+      ⚠️ Access Denied - Please verify your credentials
+    </div>
+    
+    <!-- Status Indicators -->
+    <div class="flex justify-center mt-16 space-x-6">
+      <div class="status-indicator"></div>
+      <div class="status-indicator"></div>
+      <div class="status-indicator"></div>
+    </div>
+  </div>
+  
+  <!-- Atmospheric Elements -->
+  <div class="absolute bottom-8 left-8 atmospheric-text">
+    Executive Network v4.2.1 • Secure Business Connection
+  </div>
+  
+  <div class="absolute top-8 left-8 atmospheric-text">
+    Business Time: <span id="currentTime"></span>
+  </div>
+  
+  <div class="absolute bottom-8 right-8 atmospheric-text">
+    System Status: Operational
+  </div>
+
+  <script>
+    // Dynamic time display
+    function updateTime() {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('en-US', { 
+        hour12: true,
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+      document.getElementById('currentTime').textContent = timeString;
+    }
+    
+    updateTime();
+    setInterval(updateTime, 1000);
+    
+    // Enhanced keyboard interactions
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        document.getElementById('loginBtn').click();
+      }
+    });
+    
+    // Input field enhancements
+    const inputs = document.querySelectorAll('.glass-input');
+    inputs.forEach(input => {
+      input.addEventListener('focus', function() {
+        this.style.textShadow = '0 0 15px rgba(99, 102, 241, 0.4)';
+      });
+      
+      input.addEventListener('blur', function() {
+        this.style.textShadow = 'none';
+      });
+    });
+    
+    // Button interaction enhancements
+    const loginBtn = document.getElementById('loginBtn');
+    loginBtn.addEventListener('mouseenter', function() {
+      this.style.textShadow = '0 0 25px rgba(255, 255, 255, 0.8)';
+    });
+    
+    loginBtn.addEventListener('mouseleave', function() {
+      this.style.textShadow = 'none';
+    });
+  </script>
+</body>
+</html>

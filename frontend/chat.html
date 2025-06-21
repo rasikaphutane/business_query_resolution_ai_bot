@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Assistant Chat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="chat.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    
+    /* Enhanced Animated Background */
+    body {
+      background: linear-gradient(135deg, #000000 0%, #111111 25%, #1a1a1a 50%, #111111 75%, #000000 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 20s ease infinite;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(59, 130, 246, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 40% 80%, rgba(147, 51, 234, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 90% 90%, rgba(168, 85, 247, 0.03) 0%, transparent 40%);
+      animation: floatingOrbs 25s ease-in-out infinite;
+      z-index: -2;
+    }
+    
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(45deg, transparent 30%, rgba(99, 102, 241, 0.015) 50%, transparent 70%),
+        linear-gradient(-45deg, transparent 30%, rgba(59, 130, 246, 0.01) 50%, transparent 70%);
+      animation: meshPattern 30s linear infinite;
+      z-index: -1;
+    }
+    
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      25% { background-position: 100% 50%; }
+      50% { background-position: 100% 100%; }
+      75% { background-position: 0% 100%; }
+    }
+    
+    @keyframes floatingOrbs {
+      0%, 100% { 
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.4;
+      }
+      25% { 
+        transform: translateY(-20px) rotate(90deg);
+        opacity: 0.6;
+      }
+      50% { 
+        transform: translateY(-10px) rotate(180deg);
+        opacity: 0.5;
+      }
+      75% { 
+        transform: translateY(-30px) rotate(270deg);
+        opacity: 0.7;
+      }
+    }
+    
+    @keyframes meshPattern {
+      0% { transform: translateX(-50%) translateY(-50%) rotate(0deg); }
+      100% { transform: translateX(-50%) translateY(-50%) rotate(360deg); }
+    }
+    
+    /* Elegant Glass Effects */
+    .glass-effect {
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 
+        0 32px 64px -12px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(255, 255, 255, 0.02),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.01);
+      position: relative;
+    }
+    
+    .glass-effect::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      animation: shimmer 4s ease-in-out infinite;
+    }
+    
+    @keyframes shimmer {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+    
+    .glass-input {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .glass-input::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+      transition: left 0.6s ease-in-out;
+    }
+    
+    .glass-input:focus::before {
+      left: 100%;
+    }
+    
+    .glass-input:focus {
+      background: rgba(0, 0, 0, 0.8);
+      border-color: rgba(99, 102, 241, 0.4);
+      box-shadow: 
+        0 0 0 4px rgba(99, 102, 241, 0.12),
+        0 25px 50px -12px rgba(99, 102, 241, 0.25);
+    }
+    
+    /* Executive Button Styles */
+    .executive-button {
+      background: linear-gradient(135deg, #1e40af 0%, #3730a3 50%, #581c87 100%);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 
+        0 15px 35px rgba(59, 130, 246, 0.3),
+        0 5px 15px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+    
+    .executive-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+      transition: left 0.7s ease-in-out;
+    }
+    
+    .executive-button:hover::before {
+      left: 100%;
+    }
+    
+    .executive-button:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 
+        0 25px 50px rgba(59, 130, 246, 0.4),
+        0 15px 35px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.2);
+    }
+    
+    .logout-button {
+      background: linear-gradient(135deg, #dc2626 0%, #991b1b 50%, #7f1d1d 100%);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 
+        0 15px 35px rgba(220, 38, 38, 0.3),
+        0 5px 15px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+    
+    .logout-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+      transition: left 0.7s ease-in-out;
+    }
+    
+    .logout-button:hover::before {
+      left: 100%;
+    }
+    
+    .logout-button:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 
+        0 25px 50px rgba(220, 38, 38, 0.4),
+        0 15px 35px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Message Bubble Styles */
+    .message-bubble {
+      max-width: 85%;
+      margin-bottom: 1.5rem;
+      animation: messageSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      font-size: 1.125rem;
+      line-height: 1.75;
+      font-weight: 400;
+      letter-spacing: 0.025em;
+    }
+    
+    .user-message {
+      margin-left: auto;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(59, 130, 246, 0.12) 50%, rgba(147, 51, 234, 0.1) 100%);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 1.5rem 1.5rem 0.5rem 1.5rem;
+      padding: 1.25rem 1.5rem;
+      color: #e2e8f0;
+      box-shadow: 
+        0 15px 35px rgba(99, 102, 241, 0.1),
+        0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .bot-message {
+      margin-right: auto;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1.5rem 1.5rem 1.5rem 0.5rem;
+      padding: 1.25rem 1.5rem;
+      color: #f1f5f9;
+      box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.3),
+        0 5px 15px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+    
+    .user-message::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(147, 51, 234, 0.03));
+      border-radius: inherit;
+      z-index: -1;
+      animation: userGlow 3s ease-in-out infinite;
+    }
+    
+    .bot-message::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      animation: botShimmer 4s ease-in-out infinite;
+    }
+    
+    @keyframes messageSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    @keyframes userGlow {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.6; }
+    }
+    
+    @keyframes botShimmer {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+    
+    /* Elegant Typography */
+    .business-title {
+      font-size: 1.875rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 50%, #64748b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(148, 163, 184, 0.3);
+      animation: titleGlow 6s ease-in-out infinite;
+    }
+    
+    @keyframes titleGlow {
+      0%, 100% { text-shadow: 0 0 30px rgba(148, 163, 184, 0.3); }
+      50% { text-shadow: 0 0 40px rgba(148, 163, 184, 0.5); }
+    }
+    
+    .ai-brand {
+      font-size: 1.625rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #60a5fa 0%, #a855f7 50%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+      animation: brandPulse 4s ease-in-out infinite;
+    }
+    
+    @keyframes brandPulse {
+      0%, 100% { 
+        text-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+        transform: scale(1);
+      }
+      50% { 
+        text-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
+        transform: scale(1.02);
+      }
+    }
+    
+    /* Smooth Animations */
+    .fade-in {
+      animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Scrollbar Styling */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(59, 130, 246, 0.4));
+      border-radius: 4px;
+      transition: background 0.3s ease;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.6), rgba(59, 130, 246, 0.6));
+    }
+    
+    /* Placeholder Animation */
+    .glass-input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 1.25rem;
+      font-weight: 400;
+      letter-spacing: 0.025em;
+    }
+    
+    /* Enhanced Glow Effects */
+    .glow-subtle {
+      box-shadow: 
+        0 0 25px rgba(99, 102, 241, 0.1),
+        0 0 50px rgba(59, 130, 246, 0.05),
+        0 0 100px rgba(147, 51, 234, 0.03);
+      animation: subtleGlow 8s ease-in-out infinite;
+    }
+    
+    @keyframes subtleGlow {
+      0%, 100% { 
+        box-shadow: 
+          0 0 25px rgba(99, 102, 241, 0.1),
+          0 0 50px rgba(59, 130, 246, 0.05),
+          0 0 100px rgba(147, 51, 234, 0.03);
+      }
+      50% { 
+        box-shadow: 
+          0 0 35px rgba(99, 102, 241, 0.15),
+          0 0 70px rgba(59, 130, 246, 0.08),
+          0 0 140px rgba(147, 51, 234, 0.05);
+      }
+    }
+    
+    /* Floating Particles */
+    .floating-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: rgba(99, 102, 241, 0.3);
+      border-radius: 50%;
+      animation: float 15s linear infinite;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-10vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    
+    /* Chat box specific styling */
+    #chatBox {
+      font-size: 1.125rem;
+      line-height: 1.75;
+      letter-spacing: 0.025em;
+    }
+    
+    /* Style existing chat messages */
+    #chatBox > div {
+      max-width: 85%;
+      margin-bottom: 1.5rem;
+      animation: messageSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      font-size: 1.125rem;
+      line-height: 1.75;
+      font-weight: 400;
+      letter-spacing: 0.025em;
+      padding: 1.25rem 1.5rem;
+      border-radius: 1.5rem;
+      backdrop-filter: blur(15px);
+    }
+    
+    /* Style user messages (assuming they have class 'user' or contain 'You:') */
+    #chatBox > div.user,
+    #chatBox > div:has-text("You:"),
+    #chatBox > div[data-user="true"] {
+      margin-left: auto;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(59, 130, 246, 0.12) 50%, rgba(147, 51, 234, 0.1) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 1.5rem 1.5rem 0.5rem 1.5rem;
+      color: #e2e8f0;
+      box-shadow: 
+        0 15px 35px rgba(99, 102, 241, 0.1),
+        0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Style bot messages (default) */
+    #chatBox > div:not(.user):not([data-user="true"]) {
+      margin-right: auto;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1.5rem 1.5rem 1.5rem 0.5rem;
+      color: #f1f5f9;
+      box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.3),
+        0 5px 15px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+    
+    /* Alternative styling if your messages start with "You:" or "Bot:" */
+    #chatBox > div:first-child:contains("You"),
+    #chatBox > div:first-line:contains("You") {
+      margin-left: auto;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(59, 130, 246, 0.12) 50%, rgba(147, 51, 234, 0.1) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 1.5rem 1.5rem 0.5rem 1.5rem;
+      color: #e2e8f0;
+    }
+    
+    /* History list styling */
+    #historyList {
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: 0.025em;
+    }
+    
+    #historyList li {
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+    }
+    
+    #historyList li:hover {
+      background: rgba(99, 102, 241, 0.1);
+      border-color: rgba(99, 102, 241, 0.2);
+      transform: translateX(5px);
+      color: #e2e8f0;
+    }
+  </style>
+</head>
+<body class="h-screen flex overflow-hidden">
+  <!-- Floating Particles -->
+  <div class="floating-particles">
+    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+    <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+    <div class="particle" style="left: 40%; animation-delay: 6s;"></div>
+    <div class="particle" style="left: 50%; animation-delay: 8s;"></div>
+    <div class="particle" style="left: 60%; animation-delay: 10s;"></div>
+    <div class="particle" style="left: 70%; animation-delay: 12s;"></div>
+    <div class="particle" style="left: 80%; animation-delay: 14s;"></div>
+    <div class="particle" style="left: 90%; animation-delay: 16s;"></div>
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="w-80 glass-effect p-8 border-r border-gray-700/30 glow-subtle fade-in">
+    <h2 class="business-title mb-8 tracking-wide">Executive Sessions</h2>
+    <ul id="historyList" class="space-y-3 overflow-y-auto max-h-[calc(100vh-16rem)] custom-scrollbar"></ul>
+    <h1 class="ai-brand mt-12 mb-6 tracking-tight">AI Business Assistant</h1>
+    <button onclick="logout()" class="w-full logout-button text-white py-4 px-6 rounded-xl font-semibold text-lg tracking-wide">
+      End Session
+    </button>
+  </aside>
+
+  <!-- Main Chat Area -->
+  <main class="flex-1 p-8 flex flex-col">
+    <div id="chatBox" class="flex-1 glass-effect p-8 rounded-3xl overflow-y-auto mb-8 glow-subtle custom-scrollbar fade-in"></div>
+    <div class="flex gap-6 fade-in">
+      <input id="queryInput" class="flex-1 glass-input p-6 rounded-2xl text-slate-100 placeholder-slate-400 focus:outline-none font-medium" placeholder="Share your business inquiry..." />
+      <button onclick="sendQuery()" class="executive-button text-white px-10 py-6 rounded-2xl font-semibold text-lg tracking-wide">
+        Execute
+      </button>
+    </div>
+  </main>
+
+  <script src="chat.js" defer></script>
+</body>
+</html>
